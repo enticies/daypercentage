@@ -74,24 +74,29 @@ def findPercentage(start, end, totalHours):
             return "-%"+str(round(passedBy / (24*60 - totalHours) * 100))
     return "%"+str(round(passedBy / totalHours * 100))
 
-def writeFile(percentage):
+def writeFile(outFile, percentage):
     """ Write the calculated percentage into a file."""
-    outputFile = open("/home/ares/Projects/daypercentage/dayleftV3.percentage", "w+")
+    outputFile = open(outFile, "w+")
+
     outputFile.write(percentage)
 
 if __name__ == "__main__":
-    if len(sys.argv) > 3:
+    if len(sys.argv) > 4:
         print("Too many values to unpack.")
         sys.exit(-1)
-    elif len(sys.argv) == 3:
-        start, end = sys.argv[1], sys.argv[2]
+    elif len(sys.argv) == 4:
+        outFile, start, end = sys.argv[1], sys.argv[2], sys.argv[3]
         start, end, totalHours = getHours(start, end)
-    elif len(sys.argv) == 2:
-        print("You need to enter an end point.")
+    elif len(sys.argv) == 3:
+        print("Too few values to unpack.")
+        sys.exit(-1)
+    elif len(sys.argv) == 1:
+        print("You didn't enter an output file name.")
         sys.exit(-1)
     else:
+        outFile = sys.argv[1]
         start, end, totalHours = getHours()
 
     percentage = findPercentage(start, end, totalHours)
 
-    writeFile(percentage)
+    writeFile(outFile, percentage)
