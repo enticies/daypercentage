@@ -67,7 +67,7 @@ def findPercentage(start, end, totalHours):
     passedBy = findDistance(start, now)                                     # find the distance between the start
                                                                             # and now
     percentage = "%"+str(round(passedBy / totalHours * 100))                    
-    if passedBy > totalHours:                                               # if more hours passed have than the distance
+    if passedBy > totalHours:                                               # if more hours have passed than the distance
                                                                             # between the start and the end 
         passedBy = passedBy - totalHours                                        
         percentage = round(passedBy / (24*60 - totalHours) * 100)               
