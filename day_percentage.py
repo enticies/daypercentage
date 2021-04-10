@@ -9,6 +9,7 @@ since the end.
 
 from datetime import datetime
 import sys
+import argparse
 
 def prepHours(start, end):
     """ Takes a starting and an ending hour in 12-hour format and returns them in 24-hour format."""
@@ -40,7 +41,7 @@ def checkValues(startList, endList):
         sys.exit(-1)
     return
 
-def getHours(start="6am", end="10pm"):
+def getHours(start, end):
     """ Returns starting, ending hours and the distance between the two in minutes"""
     start, end = prepHours(start, end)
     totalHours = findDistance(start, end)
@@ -77,26 +78,39 @@ def findPercentage(start, end, totalHours):
 def writeFile(outFile, percentage):
     """ Write the calculated percentage into a file."""
     outputFile = open(outFile, "w+")
-
     outputFile.write(percentage)
 
-if __name__ == "__main__":
-    if len(sys.argv) > 4:
-        print("Too many values to unpack.")
+def main():
+    parser = argparse.ArgumentParser(exit_on_error=False)
+
+    parser.add_argument("-f", "--file", help="Name of the output file.")
+    parser.add_argument("-s", "--start", help="Starting hour.")
+    parser.add_argument("-e", "--end", help="Ending hour.")
+
+    try:
+        args = parser.parse_args()
+    except:
+        print("That's not how you use flags. Use '-h' flag to learn how to use them.")
         sys.exit(-1)
-    elif len(sys.argv) == 4:
-        outFile, start, end = sys.argv[1], sys.argv[2], sys.argv[3]
-        start, end, totalHours = getHours(start, end)
-    elif len(sys.argv) == 3:
-        print("Too few values to unpack.")
-        sys.exit(-1)
-    elif len(sys.argv) == 1:
-        print("You didn't enter an output file name.")
-        sys.exit(-1)
-    else:
-        outFile = sys.argv[1]
-        start, end, totalHours = getHours()
+
+    start, end, file = args.start, args.end, args.file
+
+    if not args.file:
+        print("Not name for the output file specified. Defaulting to 'dayleft.percentage'.")
+        file = "dayleft.percentage"
+    if not args.start:
+        print("No start hour specified. Defaulting to 6am.")
+        start = "6am"
+    if not args.end:
+        print("No end hour specified. Defaulting to 10pm.")
+        end = "10pm"
+
+    start, end, totalHours = getHours(start, end)
 
     percentage = findPercentage(start, end, totalHours)
 
-    writeFile(outFile, percentage)
+    writeFile(file, percentage)
+if __name__ == "__main__":
+    main()
+
+
