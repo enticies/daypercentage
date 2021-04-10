@@ -106,6 +106,7 @@ def main():
     percentage = findPercentage(start, end, totalHours)
 
     writeFile(file, percentage)
+    
 if __name__ == "__main__":
     main()
 
