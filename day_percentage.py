@@ -81,28 +81,24 @@ def writeFile(outFile, percentage):
     outputFile.write(percentage)
 
 def main():
-    parser = argparse.ArgumentParser(exit_on_error=False)
+    parser = argparse.ArgumentParser(exit_on_error=True)
 
-    parser.add_argument("-f", "--file", help="Name of the output file.")
-    parser.add_argument("-s", "--start", help="Starting hour.")
-    parser.add_argument("-e", "--end", help="Ending hour.")
-
-    try:
-        args = parser.parse_args()
-    except:
-        print("That's not how you use flags. Use '-h' flag to learn how to use them.")
-        sys.exit(-1)
+    parser.add_argument("-f", "--file", metavar="", help="name of the output file.")
+    parser.add_argument("-s", "--start", metavar="", help="starting hour.")
+    parser.add_argument("-e", "--end", metavar="", help="ending hour.")
+    
+    args = parser.parse_args()
 
     start, end, file = args.start, args.end, args.file
 
     if not args.file:
-        print("Not name for the output file specified. Defaulting to 'dayleft.percentage'.")
+        print("Not name for the output file specified. Defaulting to 'dayleft.percentage'")
         file = "dayleft.percentage"
     if not args.start:
-        print("No start hour specified. Defaulting to 6am.")
+        print("No start hour specified. Defaulting to 6am")
         start = "6am"
     if not args.end:
-        print("No end hour specified. Defaulting to 10pm.")
+        print("No end hour specified. Defaulting to 10pm")
         end = "10pm"
 
     start, end, totalHours = getHours(start, end)
