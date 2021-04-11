@@ -41,12 +41,6 @@ def checkValues(startList, endList):
         sys.exit(-1)
     return
 
-def getHours(start, end):
-    """ Returns starting, ending hours and the distance between the two in minutes"""
-    start, end = prepHours(start, end)
-    totalHours = findDistance(start, end)
-    return start, end, totalHours
-
 def findDistance(start, end):
     """ Finds the distance between two given hours by counting the minutes in-between."""
     if start == end:                                                         
@@ -67,7 +61,7 @@ def findPercentage(start, end, totalHours):
     passedBy = findDistance(start, now)                                     # find the distance between the start
                                                                             # and now
     percentage = "%"+str(round(passedBy / totalHours * 100))                    
-    if passedBy > totalHours:                                               # if more hours have passed than the distance
+    if passedBy > totalHours:                                               # if more hours passed have than the distance
                                                                             # between the start and the end 
         passedBy = passedBy - totalHours                                        
         percentage = round(passedBy / (24*60 - totalHours) * 100)               
@@ -101,12 +95,12 @@ def main():
         print("No end hour specified. Defaulting to 10pm")
         end = "10pm"
 
-    start, end, totalHours = getHours(start, end)
+    start, end = prepHours(start, end)
+    totalHours = findDistance(start, end)
 
     percentage = findPercentage(start, end, totalHours)
 
     writeFile(file, percentage)
-    
 if __name__ == "__main__":
     main()
 
