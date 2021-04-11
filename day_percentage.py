@@ -10,6 +10,9 @@ since the end.
 from datetime import datetime
 import sys
 import argparse
+import time
+
+start_time = time.time()
 
 def prepHours(start, end):
     """ Takes a starting and an ending hour in 12-hour format and returns them in 24-hour format."""
@@ -23,10 +26,10 @@ def prepHours(start, end):
         print("Can't understand your input.\nExiting...")
         sys.exit(-1)
 
-    startList = list(map(int, str(sum(hours[:2:])).split(".")))   # convert starting hour to 24-hour format
+    startList = list(map(int, str(sum(hours[:2:])).split(".")))             # convert starting hour to 24-hour format
                                                                             # by summing the first two integers in the
                                                                             # list.
-    endList = list(map(int, str(sum(hours[2::])).split(".")))     # convert the ending hour by doing the same.
+    endList = list(map(int, str(sum(hours[2::])).split(".")))               # convert the ending hour by doing the same.
     checkValues(startList, endList)
     start = startList[0] * 60 + int(str(startList[1]).ljust(2, "0"))        # convert starting hour into minutes
     end = endList[0] * 60 + int(str(endList[1]).ljust(2, "0"))              # converts ending hour into minutes
@@ -69,10 +72,17 @@ def findPercentage(start, end, totalHours):
             return "-%"+str(round(passedBy / (24*60 - totalHours) * 100))
     return "%"+str(round(passedBy / totalHours * 100))
 
-def writeFile(outFile, percentage):
+def writeFile(outFile, percentage, exec_time):
     """ Write the calculated percentage into a file."""
     outputFile = open(outFile, "w+")
+    time_file = open("dayleft.log", "a")
+
     outputFile.write(percentage)
+    outputFile.close()
+
+    time_file.write("Execution time: {:.6f}{}".format(exec_time, "\n"))
+    time_file.close()
+    
 
 def main():
     parser = argparse.ArgumentParser(exit_on_error=True)
@@ -86,22 +96,23 @@ def main():
     start, end, file = args.start, args.end, args.file
 
     if not args.file:
-        print("Not name for the output file specified. Defaulting to 'dayleft.percentage'")
+        print("No name for the output file specified. Defaulting to 'dayleft.percentage'.")
         file = "dayleft.percentage"
     if not args.start:
-        print("No start hour specified. Defaulting to 6am")
+        print("No start hour specified. Defaulting to 6am.")
         start = "6am"
     if not args.end:
-        print("No end hour specified. Defaulting to 10pm")
+        print("No end hour specified. Defaulting to 10pm.")
         end = "10pm"
 
     start, end = prepHours(start, end)
     totalHours = findDistance(start, end)
 
     percentage = findPercentage(start, end, totalHours)
-
-    writeFile(file, percentage)
+    exec_time = time.time() - start_time
     
+    writeFile(file, percentage, exec_time)
+
 if __name__ == "__main__":
     main()
 
