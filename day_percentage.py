@@ -72,15 +72,16 @@ def findPercentage(start, end, totalHours):
             return "-%"+str(round(passedBy / (24*60 - totalHours) * 100))
     return "%"+str(round(passedBy / totalHours * 100))
 
-def writeFile(outFile, percentage, exec_time):
+def writeFile(outFile, percentage, exec_time, start, end):
     """ Write the calculated percentage into a file."""
     outputFile = open(outFile, "w+")
-    time_file = open("dayleft.log", "a")
+    time_file = open("/home/ares/Projects/daypercentage/dayleft.log", "a")
 
     outputFile.write(percentage)
     outputFile.close()
 
-    time_file.write("Execution time: {:.6f}{}".format(exec_time, "\n"))
+    time_file.write("Execution time: {:.6f}, Time of the day: {}, Starting hour: {}, Ending hour: {}{}".format(exec_time,
+        datetime.now(), start, end, "\n"))
     time_file.close()
     
 
@@ -111,7 +112,7 @@ def main():
     percentage = findPercentage(start, end, totalHours)
     exec_time = time.time() - start_time
     
-    writeFile(file, percentage, exec_time)
+    writeFile(file, percentage, exec_time, start, end)
 
 if __name__ == "__main__":
     main()
