@@ -16,23 +16,27 @@ start_time = time.time()
 
 def prepHours(start, end):
     """ Takes a starting and an ending hour in 12-hour format and returns them in 24-hour format."""
+    # replace am/pm with 0 and 12 respectively,
+    # return a list of integers. First two
+    # containing starting hours, the last two
+    # the ending hours.
     try:
         hours = list(map(float, "{} {}".format(start, end).replace("am", " 0")
-                    .replace("pm", " 12").replace(":", ".").split()))                   # replace am/pm with 0 and 12 respectively,
-                                                                                        # return a list of integers. First two
-                                                                                        # containing the starting hour, the last two
-                                                                                        # the ending hour.
+                    .replace("pm", " 12").replace(":", ".").split()))                   
     except:
         print("Can't understand your input.\nExiting...")
         sys.exit(-1)
+    # convert starting hour to 24-hour format
+    # by summing the first two integers in the list
+    startList = list(map(int, str(sum(hours[:2:])).split(".")))             
 
-    startList = list(map(int, str(sum(hours[:2:])).split(".")))             # convert starting hour to 24-hour format
-                                                                            # by summing the first two integers in the
-                                                                            # list.
-    endList = list(map(int, str(sum(hours[2::])).split(".")))               # convert the ending hour by doing the same.
+    # convert the ending hour by doing the same.
+    endList = list(map(int, str(sum(hours[2::])).split(".")))               
     checkValues(startList, endList)
-    start = startList[0] * 60 + int(str(startList[1]).ljust(2, "0"))        # convert starting hour into minutes
-    end = endList[0] * 60 + int(str(endList[1]).ljust(2, "0"))              # converts ending hour into minutes
+    # convert starting hour into minutes
+    start = startList[0] * 60 + int(str(startList[1]).ljust(2, "0"))       
+    # converts ending hour into minutes
+    end = endList[0] * 60 + int(str(endList[1]).ljust(2, "0"))              
     return start, end
 
 def checkValues(startList, endList):
@@ -61,11 +65,10 @@ def findPercentage(start, end, totalHours):
     format = "%H:%M"
     now = list(map(int, datetime.now().strftime(format).split(":")))        # get the current time 
     now = now[0] * 60 + now[1]                                              # turn it into minutes
-    passedBy = findDistance(start, now)                                     # find the distance between the start
-                                                                            # and now
+    passedBy = findDistance(start, now)                                     # find the distance between the start and now
+                                                                            
     percentage = "%"+str(round(passedBy / totalHours * 100))                    
-    if passedBy > totalHours:                                               # if more hours have passed than the distance
-                                                                            # between the start and the end 
+    if passedBy > totalHours:                                               # if more hours passed have than the distance between the start and the end
         passedBy = passedBy - totalHours                                        
         percentage = round(passedBy / (24*60 - totalHours) * 100)               
         if percentage != 0:
