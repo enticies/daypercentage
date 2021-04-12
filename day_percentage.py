@@ -20,8 +20,8 @@ def prepHours(start, end):
         hours = list(map(float, "{} {}".format(start, end).replace("am", " 0")
                     .replace("pm", " 12").replace(":", ".").split()))                   # replace am/pm with 0 and 12 respectively,
                                                                                         # return a list of integers. First two
-                                                                                        # containing starting hours, the last two
-                                                                                        # the ending hours.
+                                                                                        # containing the starting hour, the last two
+                                                                                        # the ending hour.
     except:
         print("Can't understand your input.\nExiting...")
         sys.exit(-1)
