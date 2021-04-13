@@ -16,10 +16,8 @@ start_time = time.time()
 
 def prepHours(start, end):
     """ Takes a starting and an ending hour in 12-hour format and returns them in 24-hour format."""
-    # replace am/pm with 0 and 12 respectively,
-    # return a list of integers. First two
-    # containing starting hours, the last two
-    # the ending hours.
+    # replace am/pm with 0 and 12 respectively, return a list of integers.
+    # First two containing starting hours, the last two the ending hours.
     try:
         hours = list(map(float, "{} {}".format(start, end).replace("am", " 0")
                     .replace("pm", " 12").replace(":", ".").split()))                   
