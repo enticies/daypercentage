@@ -35,6 +35,10 @@ def prepHours(start, end):
     start = startList[0] * 60 + int(str(startList[1]).ljust(2, "0"))       
     # converts ending hour into minutes
     end = endList[0] * 60 + int(str(endList[1]).ljust(2, "0"))              
+
+    if not 0 <= start <= 1440 or not 0 <= end <= 1440:
+        writeLog(start, end)
+
     return start, end
 
 def checkValues(startList, endList):
@@ -54,8 +58,9 @@ def findDistance(start, end):
     while start != end:
         if start == 24*60:
             start = 0
-        count += 1
-        start += 1
+        else:
+            count += 1
+            start += 1
     return count
 
 def findPercentage(start, end, totalHours):
@@ -73,18 +78,26 @@ def findPercentage(start, end, totalHours):
             return "-%"+str(round(passedBy / (24*60 - totalHours) * 100))
     return "%"+str(round(passedBy / totalHours * 100))
 
-def writeFile(outFile, percentage, exec_time, start, end):
+def writeLog(start, end, execTime=None):
+    logFile = open("/home/ares/Projects/daypercentage/dayleft.log", "a")
+
+    if execTime: 
+        logFile.write("Execution time: {:.6f}, Time of the day: {}, Starting hour: {}, Ending hour: {}\n".format(execTime,  
+            datetime.now(), start, end))
+    else:
+        logFile.write("Incorrect minute. START: {}, END: {}, NOW: {}\n".format(start, end, execTime))
+        logFile.close()
+        sys.exit(-1)
+
+    logFile.close()
+
+def writeFile(outFile, percentage, execTime, start, end):
     """ Write the calculated percentage into a file."""
     outputFile = open(outFile, "w+")
-    time_file = open("/home/ares/Projects/daypercentage/dayleft.log", "a")
-
     outputFile.write(percentage)
     outputFile.close()
-
-    time_file.write("Execution time: {:.6f}, Time of the day: {}, Starting hour: {}, Ending hour: {}{}".format(exec_time,
-        datetime.now(), start, end, "\n"))
-    time_file.close()
     
+    writeLog(start, end, execTime) 
 
 def main():
     parser = argparse.ArgumentParser(exit_on_error=True)
@@ -111,9 +124,9 @@ def main():
     totalHours = findDistance(start, end)
 
     percentage = findPercentage(start, end, totalHours)
-    exec_time = time.time() - start_time
+    execTime = time.time() - start_time
     
-    writeFile(file, percentage, exec_time, start, end)
+    writeFile(file, percentage, execTime, start, end)
 
 if __name__ == "__main__":
     main()
