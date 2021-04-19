@@ -57,12 +57,6 @@ def checkInput(start, end, checkType="ampm"):
         print("Hours must be between 0 and 12.\nExiting...")
         sys.exit(-1)
 
-def errorExit(errorType="inputError"):
-    if errorType == "minuteError":
-        print("Minutes must be between 0 and 59.\nExiting...")
-        exit(-1)
-    return
-
 def findDistance(start, end):
     """ Finds the distance between two given hours by counting the minutes in-between."""
     if start == end:                                                         
