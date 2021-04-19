@@ -11,43 +11,56 @@ from datetime import datetime
 import sys
 import argparse
 import time
+from multiplereplace import multipleReplace
+import re
 
 start_time = time.time()
 
 def prepHours(start, end):
     """ Takes a starting and an ending hour in 12-hour format and returns them in 24-hour format."""
-    # replace am/pm with 0 and 12 respectively, return a list of integers.
-    # First two containing starting hours, the last two the ending hours.
-    try:
-        hours = list(map(float, "{} {}".format(start, end).replace("am", " 0")
-                    .replace("pm", " 12").replace(":", ".").split()))                   
-    except:
-        print("Can't understand your input.\nExiting...")
-        sys.exit(-1)
-    # convert starting hour to 24-hour format
-    # by summing the first two integers in the list
-    startList = list(map(int, str(sum(hours[:2:])).split(".")))             
+    start, end = parseInput(start, end)
+    checkInput(start, end)
+    table = {"am": "0", "pm":"12"}
+    startAP = int(multipleReplace(table, start[-1]))
+    endAP = int(multipleReplace(table, end[-1]))
+    start = (int(start[0]) + startAP) * 60 + int(start[1])
+    end = (int(end[0]) + endAP) * 60 + int(end[1])
+    return start, end
 
-    # convert the ending hour by doing the same.
-    endList = list(map(int, str(sum(hours[2::])).split(".")))               
-    checkValues(startList, endList)
-    # convert starting hour into minutes
-    start = startList[0] * 60 + int(str(startList[1]).ljust(2, "0"))       
-    # converts ending hour into minutes
-    end = endList[0] * 60 + int(str(endList[1]).ljust(2, "0"))              
+def parseInput(start, end):
+    table = {"am": " am", "pm": " pm", ":": " ", ".": " "}
 
-    if not 0 <= start <= 1440 or not 0 <= end <= 1440:
-        writeLog(start, end)
+    start = multipleReplace(table, start.lower()).split()
+    end = multipleReplace(table, end.lower()).split()
+
+    if len(start) == 2:
+        start.insert(1, "00")
+    if len(end) == 2:
+        end.insert(1, "00")
+
+    if len(start[1]) == 1:
+        start[1] = start[1].ljust(2, "0")
+    if len(end[1]) == 1:
+        end[1] = end[1].ljust(2, "0")
 
     return start, end
 
-def checkValues(startList, endList):
-    if not 0 <= startList[0] <= 24 or not 0 <= endList[0] <= 24:
+def checkInput(start, end, checkType="ampm"):
+    endings = ["am", "pm"]
+    if start[-1] not in endings or end[-1] not in endings:
+        print("You need to specify AM/PM.\nExiting...")
+        sys.exit(-1)
+    if not 0 <= int(start[1]) <= 59 or not 0 <= int(end[1]) <= 59:
+        print("Minutes must be between 0 an 59.\nExiting...")
+        sys.exit(-1)
+    if not 0 <= int(start[0]) <= 12 or not 0 <= int(end[0]) <= 12:
         print("Hours must be between 0 and 12.\nExiting...")
         sys.exit(-1)
-    if not 0 <= startList[1] <= 59 or not 0 <= endList[1] <= 59:
+
+def errorExit(errorType="inputError"):
+    if errorType == "minuteError":
         print("Minutes must be between 0 and 59.\nExiting...")
-        sys.exit(-1)
+        exit(-1)
     return
 
 def findDistance(start, end):
