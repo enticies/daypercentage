@@ -65,7 +65,7 @@ def checkInput(start, end):
     if not 0 <= int(start[1]) <= 59 or not 0 <= int(end[1]) <= 59:
         print("Minutes must be between 0 an 59.\nExiting...")
         sys.exit(-1)
-    # Check if hour portion is in corrent range
+    # Check if hour portion is in correct range
     if not 0 <= int(start[0]) <= 12 or not 0 <= int(end[0]) <= 12:
         print("Hours must be between 0 and 12.\nExiting...")
         sys.exit(-1)
