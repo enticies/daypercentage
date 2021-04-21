@@ -54,18 +54,26 @@ def checkInput(start, end):
         print("Can't parse your input.\nExiting...")
         sys.exit(-1)
     # Check if non-integers have been entered
-    if not (start[0]+start[1]).isdigit() or not (end[0]+end[1]).isdigit():
-        print("Hour and minute portions must be integers.\nExiting...")
+    if not start[0].isdigit() or not end[0].isdigit():
+        print("Hour portion must be integers.\nExiting...")
         sys.exit(-1)
     # Check if am/pm have been correctly entered
     if start[-1] not in endings or end[-1] not in endings:
         print("You need to specify AM/PM.\nExiting...")
         sys.exit(-1)
+    if start[1] not in endings:
+        if not start[1].isdigit():
+            print("Hour and minute portions must be integers.\nExiting...")
+            sys.exit(-1)
+    if end[1] not in endings:
+        if not end[1].isdigit():
+            print("Hour and minute portions must be integers.\nExiting...")
+            sys.exit(-1)
     # Check if minute portion is in correct range
     if not 0 <= int(start[1]) <= 59 or not 0 <= int(end[1]) <= 59:
         print("Minutes must be between 0 an 59.\nExiting...")
         sys.exit(-1)
-    # Check if hour portion is in correct range
+    # Check if hour portion is in corrent range
     if not 0 <= int(start[0]) <= 12 or not 0 <= int(end[0]) <= 12:
         print("Hours must be between 0 and 12.\nExiting...")
         sys.exit(-1)
