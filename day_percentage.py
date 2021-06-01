@@ -108,7 +108,7 @@ def findPercentage(start, end, totalHours):
     return "%"+str(round(passedBy / totalHours * 100))
 
 def writeLog(start, end, execTime=None):
-    logFile = open("/home/ares/Projects/daypercentage/dayleft.log", "a")
+    logFile = open("/home/ares/Projects/daypercentage/dayleft.log", "a")    #TODO: add an optional flag to specify the log file name and place
 
     if execTime: 
         logFile.write("Execution time: {:.6f}, Time of the day: {}, Starting hour: {}, Ending hour: {}\n".format(execTime,  
